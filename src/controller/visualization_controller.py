@@ -5,35 +5,36 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from PyQt6.QtWidgets import QApplication, QSystemTrayIcon, QMenu
 from PyQt6.QtGui import QIcon, QPixmap
 
-from view.main import Main
+import pandas as pd
 
-class Visualization_Controller:
+from view.main import Main
+from observer.file_selection_observer import File_Selection_Observer
+
+class Visualization_Controller (File_Selection_Observer):
     def __init__(self):
         self.init_gui()
+        # self.selected_file = None
 
-    # def on_open_app(self):
-    #     print('Abrir aplicativo')
-        
-    # def on_exit_app(self, app):
-    #     self.tray_icon.hide()
-    #     app.quit()
+    def update_file_selection(self, file_path):
+        self.selected_file = file_path
+        self.handle_file_selection()
+
+    def update_closing(self):
+        pass
 
     def init_gui(self):
         app = QApplication(sys.argv)
-        # self.tray_icon = QSystemTrayIcon(parent=app)
-        # self.tray_icon.setToolTip('Treemap Glyph')
-        # self.tray_icon.setIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(16, 16)))
-        
-        # self.menu = QMenu()
-        # self.menu.addAction("Abrir aplicativo", self.on_open_app)
-        # self.menu.addAction("Sair", lambda: self.on_exit_app(app))
-        # self.tray_icon.setContextMenu(self.menu)
-        
-        # self.tray_icon.show()
-        # app.setWindowIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(32, 32)))
         self.__main_view = Main()
+        self.__main_view.attach_observer(self)
         self.__main_view.show()
         sys.exit(app.exec())
+
+    def handle_file_selection(self):
+        data = pd.read_csv(f'{self.__main_view.selected_file}', sep='\t', encoding='utf-8')
+
+        print(data.head(6))
+
+    
 
 if __name__ == "__main__":
     # app = QtWidgets.QApplication(sys.argv)

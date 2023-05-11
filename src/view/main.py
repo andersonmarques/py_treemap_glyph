@@ -1,10 +1,14 @@
 
 from view.main_screen import Ui_MainWindow
+from observer.file_selection_observable import File_Selection_Observable
+
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon
 from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog
 
-class Main (QMainWindow, Ui_MainWindow):
+import pandas as pd
+
+class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -17,6 +21,9 @@ class Main (QMainWindow, Ui_MainWindow):
         self.statusBar().addWidget(self.progressBar)
         self.load_icons()
         self.actionOpen_file.triggered.connect(self.on_open_file)
+        self.selected_file = None
+        File_Selection_Observable.__init__(self)
+
 
     def on_resize(self, a0: QResizeEvent):
         size = a0.size()
@@ -51,21 +58,27 @@ class Main (QMainWindow, Ui_MainWindow):
         icon.addPixmap(QPixmap(r"\img\folder.png"), QIcon.Mode.Normal, QIcon.State.Off)
         self.actionOpen_file.setIcon(icon)
     
-    def on_open_file(self):
-        print('Abrir arquivo')
-        filename, _ = QFileDialog.getOpenFileName(
-        None,
-        "Selecionar Arquivo",
-        "",
-        "Todos os Arquivos (*.*);; Arquivos de Texto (*.txt)"
-        )
-        print(f"Arquivo selecionado: {filename}")
-        # directory = QFileDialog.getExistingDirectory(
-        #     None,
-        #     "Selecionar Diretório",
-        #     ""
-        #     )   
-        self.progressBar.setValue(50)        
-        self.progressBar.setValue(100)
-        self.progressBar.setValue(0)
+    def on_open_file(self):        
+        dialog = QFileDialog()
+        dialog.fileSelected.connect(self.handle_file_selection)
+        dialog.exec()
+
+    def handle_file_selection(self, file_path):
+        print(f'File selected: {file_path}')
+        self.selected_file = file_path
+        self.notify_file_selected(file_path)
+
+    def closeEvent(self, event):
+        self.notify_closing()
+
+
+    @property
+    def selected_file(self):
+        return self.__selected_file
+    
+    @selected_file.setter
+    def selected_file(self, selected_file):
+        self.__selected_file = selected_file
+
+       
     
