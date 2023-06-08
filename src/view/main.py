@@ -1,6 +1,7 @@
 
 from view.main_screen import Ui_MainWindow
 from observer.file_selection_observable import File_Selection_Observable
+from controller.business.treemap import Treemap
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon
@@ -24,6 +25,15 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
         self.selected_file = None
         File_Selection_Observable.__init__(self)
 
+    def load_treemap(self):
+        self.progressBar.setValue(0)
+        self.progressBar.show()
+        self.treemap = Treemap()
+        self.treemap.build()
+        # self.treemap.load_data(self.selected_file)
+        # self.treemap.calculate()
+        self.treemap.draw()
+        self.progressBar.hide()
 
     def on_resize(self, a0: QResizeEvent):
         size = a0.size()
