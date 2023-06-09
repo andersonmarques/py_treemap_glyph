@@ -1,13 +1,12 @@
 class Dimension:
-    def __init__(self, o=None):
-        self.width = 0
-        self.height = 0
-        self.x = 0
-        self.y = 0
+    def __init__(self, x=0, y=0, width=0, height=0):
+        self.width = width
+        self.height = height
+        self.x = x
+        self.y = y
 
     def getArea(self):
-        area = self.width * self.height
-        return area
+        return self.width * self.height
 
     def reconfigure(self, x, y, width, height):
         self.x = x
@@ -16,5 +15,4 @@ class Dimension:
         self.height = height
 
     def toString(self):
-        string = f'width: {self.width} height: {self.height} x: {self.x} y: {self.y}'
-        return string
+        return f"width: {self.width}, height: {self.height}, x: {self.x}, y: {self.y}"

@@ -1,11 +1,12 @@
 
 from view.main_screen import Ui_MainWindow
 from observer.file_selection_observable import File_Selection_Observable
-from controller.business.treemap import Treemap
+# from controller.business.treemap import Treemap
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QRect, QSize
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon
 from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog
+from PyQt6.QtGui import QPainter, QBrush, QColor
 
 import pandas as pd
 
@@ -24,16 +25,45 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
         self.actionOpen_file.triggered.connect(self.on_open_file)
         self.selected_file = None
         File_Selection_Observable.__init__(self)
+        self.label_visualization_area.setPixmap(
+            self.createSquarePixmap(
+                self.label_visualization_area.size(), 
+                QColor(105, 0, 50)
+            )
+        )
 
-    def load_treemap(self):
-        self.progressBar.setValue(0)
-        self.progressBar.show()
-        self.treemap = Treemap()
-        self.treemap.build()
-        # self.treemap.load_data(self.selected_file)
-        # self.treemap.calculate()
-        self.treemap.draw()
-        self.progressBar.hide()
+    def createSquarePixmap(self, drawable_area: QSize, color):
+        pixmap = QPixmap(drawable_area)
+        pixmap.fill(Qt.GlobalColor.transparent)#torna o fundo transparente da imagem
+
+        painter = QPainter(pixmap)#Esta classe fornece métodos para desenhar em um pixmap
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)# RenderHint.Antialiasing: renderiza o pixmap com antialiasing
+
+        brush = QBrush(color)#QBrush: define a cor e o estilo de preenchimento de formas desenhadas
+        painter.setBrush(brush)# atribuindo a cor e o estilo de preenchimento de formas desenhadas ao painter
+
+        pen = painter.pen() # QPen: define a cor, largura e estilo da linha usada para desenhar formas
+        pen.setWidth(2) #definindo a largura da linha da forma
+        painter.setPen(pen) # atribuindo a largura da linha ao painter
+
+        squareSize = min(drawable_area.width(), drawable_area.height())# retorna o menor valor entre a largura e a altura
+        squareRect = QRect(2, 2, int(squareSize/2), int(squareSize/2)) # cria um retangulo com o tamanho da menor dimensão
+        # squareRect.moveCenter(pixmap.rect().center())# move o retangulo para o centro do pixmap
+
+        painter.drawRect(squareRect)# desenha o retangulo no pixmap
+        painter.end()# finaliza o painter
+
+        return pixmap
+
+    # def load_treemap(self):
+        # self.progressBar.setValue(0)
+        # self.progressBar.show()
+        # self.treemap = Treemap()
+        # self.treemap.build()
+        # # self.treemap.load_data(self.selected_file)
+        # # self.treemap.calculate()
+        # self.treemap.draw()
+        # self.progressBar.hide()
 
     def on_resize(self, a0: QResizeEvent):
         size = a0.size()
@@ -41,8 +71,7 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
         right = int(size.width() * 0.25)
         self.splitter_esq_dir.setGeometry(0, 0, size.width(), size.height())
         self.splitter_esq_dir.setSizes([left, right])
-        self.label_visualization_area.setText(
-            f'-> {size.width()}x{size.height()} -> 80%: {left} x 20%: {right} | {self.splitter_esq_dir.width()}x{self.splitter_esq_dir.height()}')
+        self.label_visualization_area.setGeometry(self.splitter_esq_dir.geometry())
         super().resizeEvent(a0)
 
     def load_icons(self):

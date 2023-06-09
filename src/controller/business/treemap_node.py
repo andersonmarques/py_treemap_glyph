@@ -1,14 +1,55 @@
-class Treemap_Node:
-    def __init__(self):
-        self.parent = None
+import abc
+from dimension import Dimension
+
+class Treemap_Node (abc.ABC):
+    def __init__(self, label, value, parent=None):
+        self.label = label
+        self.value = value
+        self.parent = parent
         self.children = []
+        self.dimension = Dimension(0, 0, 0, 0)
+
+    @abc.abstractmethod
+    def addChild(self, child):
+        pass
+
+    @abc.abstractmethod
+    def draw(self, dimension: Dimension, painter, color):
+        pass
 
     def hasChildren(self):
+        '''Returns True if the node has children, False otherwise'''
         return len(self.children) > 0
 
-    def getType(self):
-        return 'TreemapNode'
+    @property
+    def dimension(self):
+        return self.__dimension
+    
+    @dimension.setter
+    def dimension(self, dimension):
+        self.__dimension = dimension
 
+    @property
+    def label (self):
+        return self.__label
+    
+    @label.setter
+    def label(self, label):
+        if label == '':
+            raise ValueError('Label must not be empty')
+        
+        self.__label = label
+
+    
+    @property
+    def value (self):
+        return self.__value
+    
+    @value.setter
+    def value(self, value):
+        if value < 0: #The treemap can't have negative values
+            raise ValueError('Value must be greater than 0')
+        self.__value = value
 
 # from navigable import Navigable
 

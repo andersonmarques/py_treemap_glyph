@@ -1,97 +1,49 @@
 from treemap_node import Treemap_Node
+from dimension import Dimension
 
-class TreemapLevel(Treemap_Node):
-    def __init__(self, label, value):
-        super().__init__()
+class Treemap_Level(Treemap_Node):
+    def __init__(self, label='', value=0.0, parent=None):
+        super().__init__(label, value, parent)
         self.label = label
-        self.value = value
+        self.items = []
+        self.value = value # sum of all children values
 
-    def getType(self):
-        return 'TreemapLevel'
+    def calculate_level_value(self, total_value):
+        '''Calculate the value of the level and its children'''
+        if self.hasChildren():
+            # calculate the value of the children
+            for child in self.items:
+                child.calculate(total_value)
+                self.value += child.value
+        else:
+            # calculate the value of the level
+            self.value = total_value
 
 
+    def addChild(self, child):
+        '''Add a child to the level. The child is a Treemap_Item object'''
+        self.items.append(child)
 
-# from treemap_node import TreemapNode
-# from treemap_item import TreemapItem
+    def draw(self, dimension: Dimension, painter, color):
+        '''Draw the level and its children'''
+        if self.hasChildren():
+            # draw the children
+            for child in self.items:
+                child.draw(dimension, painter, color)
+        else:
+            # draw the level
+            painter.setBrush(color)
+            painter.drawRect(dimension.x, dimension.y, dimension.width, dimension.height)
+            painter.drawText(dimension.x, dimension.y, dimension.width, dimension.height, self.label)
 
-# class TreemapLevel(TreemapNode):
-#     def __init__(self):
-#         super().__init__()
-#         self.borderWidth = 2
-#         self.drawIniY = 20
-#         self.font = 'vera'
-#         self.fontSize = 15
-#         self.fontStyle = 'bold'
-#         self.fontColor = 'black'
-#         self.ischildrenLeaf = False
-#         self.level = 0
-#         self.drawableDimension = {}
+    @property
+    def items (self):
+        return self.__items
+    
+    @items.setter
+    def items(self, items):
+        if items == None:
+            raise ValueError('Items must not be None')
+        self.__items = items
 
-#     def getType(self):
-#         return 'TreemapLevel'
-
-#     def resizeBorder(self):
-#         r = Rectangle(width=self.width - (2 * self.borderWidth), height=self.height - self.drawIniY - self.borderWidth,
-#                       x=self.x + self.borderWidth, y=self.y + self.drawIniY)
-#         self.drawableDimension = r
-
-#     def ischildren(self, treemapItem):
-#         b = False
-#         if self.ischildrenLeaf:
-#             b = self.testFather(treemapItem)
-#         return b
-
-#     def insert(self, columnNames, item):
-#         if len(columnNames) == 0:
-#             self.children.append(item)
-#             item.parent = self
-#         else:
-#             treeLevel = None
-#             for v in self.children:
-#                 if v.label == item.map.get(columnNames[0]):
-#                     treeLevel = v
-#                     break
-
-#             if treeLevel is None:
-#                 treeLevel = TreemapLevel()
-#                 treeLevel.label = item.map.get(columnNames[0])
-#                 self.children.append(treeLevel)
-#                 treeLevel.parent = self
-
-#             aux = columnNames[1:]
-#             treeLevel.insert(aux, item)
-
-#     def draw(self):
-#         self.resizeBorder()
-#         # self.a = 225
-#         Rectangle.draw(self)
-#         # canvas:attrColor(self.fontColor)
-#         # canvas:drawRect('frame', self.drawableDimension.x, self.drawableDimension.y, self.drawableDimension.width, self.drawableDimension.height)
-#         # if self.label ~= '' then
-#         #     canvas:attrFont(self.font, self.fontSize, self.fontStyle)
-#         #     local lwidth, lheight = canvas:measureText(self.label)
-#         #     if lwidth >= self.width then
-#         #         lwidth, self.fontSize = self:verifyFontCanvasSize(self.label, lwidth, self.width, self.font, self.fontSize, self.fontStyle)
-#         #     end
-#         #     canvas:attrFont(self.font, self.fontSize, self.fontStyle)
-#         #     local lwidth, lheight = canvas:measureText(self.label)
-#         #     local pontoCentralX = (self.width/2)+self.x
-#         #     local pontoCentralY = self.y+1
-#         #     canvas:drawText(pontoCentralX-(lwidth/2), pontoCentralY, self.label)
-#         # end
-#         for v in self.children:
-#             v.draw()
-
-#     def setValue(self, colunaTamanho):
-#         self.valor = 0
-#         for v in self.children:
-#             v.setValue(colunaTamanho)
-#             self.valor = self.valor + v.getValor()
-
-#     def toString(self):
-#         string = "[" + self.label + ": "
-#         for v in self.children:
-#             if v is not None:
-#                 string = string + v.toString() + "__\n"
-#         string = string + "]"
-#         return string
+    
