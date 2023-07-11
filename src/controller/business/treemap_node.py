@@ -3,11 +3,16 @@ from dimension import Dimension
 
 class Treemap_Node (abc.ABC):
     def __init__(self, label, value, parent=None):
-        self.label = label
-        self.value = value
-        self.parent = parent
-        self.children = []
-        self.dimension = Dimension(0, 0, 0, 0)
+        self.__label = label # label of the item
+        self._value: float = value # sum of all children values
+        self.children = [] # children of the item
+        self.parent = parent # parent of the item
+        self.dimension = Dimension(0, 0, 0, 0) # dimension of the item
+
+    @abc.abstractmethod
+    def calculate_value(self) -> float:
+        '''Calculate the value of the item'''
+        pass
 
     @abc.abstractmethod
     def addChild(self, child):
@@ -42,14 +47,14 @@ class Treemap_Node (abc.ABC):
 
     
     @property
-    def value (self):
-        return self.__value
+    def value(self) -> float:
+        return self._value
     
     @value.setter
-    def value(self, value):
+    def value(self, value: float):
         if value < 0: #The treemap can't have negative values
             raise ValueError('Value must be greater than 0')
-        self.__value = value
+        self._value = value
 
 # from navigable import Navigable
 
