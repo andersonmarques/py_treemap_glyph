@@ -37,7 +37,7 @@
     </property>
     <property name="maximumSize">
      <size>
-      <width>1500</width>
+      <width>16777215</width>
       <height>16777215</height>
      </size>
     </property>
@@ -69,14 +69,16 @@
      <widget class="QLabel" name="label_visualization_area">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>20</y>
-        <width>611</width>
-        <height>741</height>
+        <x>0</x>
+        <y>60</y>
+        <width>621</width>
+        <height>481</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(170, 255, 255);</string>
+       <string notr="true">background-color: rgb(170, 255, 255);
+background-repeat: no-repeat;
+background-position: center;</string>
       </property>
       <property name="text">
        <string/>
@@ -130,7 +132,7 @@
        <property name="frameShadow">
         <enum>QFrame::Raised</enum>
        </property>
-       <widget class="QTabWidget" name="tabWidget">
+       <widget class="QTabWidget" name="tab_widget_abas">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -146,7 +148,7 @@
          </font>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_treemap">
          <attribute name="title">
@@ -253,6 +255,119 @@
            </item>
            <item row="3" column="3">
             <widget class="QPushButton" name="push_button_baixo_treemap">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+        <widget class="QWidget" name="tab_grid">
+         <attribute name="title">
+          <string>Grid</string>
+         </attribute>
+         <widget class="QWidget" name="formLayoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>10</y>
+            <width>371</width>
+            <height>261</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="7" column="0">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>Color:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Size:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Selected Attributes:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QCheckBox" name="checkBox_5">
+             <property name="text">
+              <string>Label:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Avaliable Attributes:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1" colspan="2">
+            <widget class="QPushButton" name="push_button_view_grid">
+             <property name="text">
+              <string>View Grid</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1" colspan="2">
+            <widget class="QComboBox" name="comboBox_11"/>
+           </item>
+           <item row="6" column="1" colspan="2">
+            <widget class="QComboBox" name="comboBox_12"/>
+           </item>
+           <item row="5" column="1" colspan="2">
+            <widget class="QComboBox" name="comboBox_13"/>
+           </item>
+           <item row="1" column="0" rowspan="3">
+            <widget class="QListWidget" name="listWidget_7">
+             <item>
+              <property name="text">
+               <string>teste</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>teste2</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="2" rowspan="3">
+            <widget class="QListWidget" name="listWidget_8"/>
+           </item>
+           <item row="1" column="3">
+            <widget class="QPushButton" name="push_button_cima_grid">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="push_button_direita_gird">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="push_button_esquerda_grid">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QPushButton" name="push_button_baixo_grid">
              <property name="text">
               <string/>
              </property>
@@ -532,6 +647,9 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_file"/>
+    <addaction name="separator"/>
+    <addaction name="action_treemap"/>
+    <addaction name="action_grid"/>
    </widget>
    <widget class="QMenu" name="menuAdaptive_Glyph">
     <property name="title">
@@ -575,7 +693,19 @@
     <string>Version</string>
    </property>
   </action>
+  <action name="action_treemap">
+   <property name="text">
+    <string>Treemap</string>
+   </property>
+  </action>
+  <action name="action_grid">
+   <property name="text">
+    <string>Grid</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../img/img_.qrc"/>
+ </resources>
  <connections/>
 </ui>

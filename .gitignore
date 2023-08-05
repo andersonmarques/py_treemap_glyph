@@ -1,2 +1,4 @@
 
 src/view/__pycache__/main.cpython-311.pyc
+*.pyc
+*.qrc

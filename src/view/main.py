@@ -4,9 +4,11 @@ from observer.file_selection_observable import File_Selection_Observable
 # from controller.business.treemap import Treemap
 
 from PyQt6.QtCore import Qt, QRect, QSize
-from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon
-from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog
+from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon, QImage
+from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog, QVBoxLayout
 from PyQt6.QtGui import QPainter, QBrush, QColor
+
+from PIL import Image, ImageDraw
 
 import pandas as pd
 
@@ -15,23 +17,83 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        self.resizeEvent = self.on_resize
-        self.showMaximized()
-        self.progressBar = QProgressBar()
-        self.progressBar.setMaximum(100)
-        self.progressBar.setValue(0)
-        self.statusBar().addWidget(self.progressBar)
+        self.resizeEvent = self.on_resize #override the method resizeEvent to resize the splitter
+        self.showMaximized()       
+        
+        # layout.addWidget(self.label_visualization_area)
+        ########## Hide the treemap tab ##########
+        #tab 0: treemap
+        #tab 1: grid
+        #tab 3: categorical glyphs
+        #tab 4: continuous glyphs
+        #tab 5: details
+        #tab 6: filters
+        self.tab_widget_abas.setTabVisible(0, False)
+
+        # self.progressBar = QProgressBar()
+        # self.progressBar.setMaximum(100)
+        # self.progressBar.setValue(0)
+        # self.statusBar().addWidget(self.progressBar)
+        self.statusbar.hide()
         self.load_icons()
         self.actionOpen_file.triggered.connect(self.on_open_file)
         self.selected_file = None
         File_Selection_Observable.__init__(self)
-        self.label_visualization_area.setPixmap(
-            self.createSquarePixmap(
-                self.label_visualization_area.size(), 
-                QColor(105, 0, 50)
-            )
-        )
+        # self.label_visualization_area.setPixmap(
+        #     self.createSquarePixmap(
+        #         self.label_visualization_area.size(), 
+        #         QColor(105, 0, 50)
+        #     )
+        # )
+        ####### Actions of the buttons ########
+        self.push_button_view_grid.clicked.connect(lambda : self.create_grid_image(10, 10, 
+                                                                                   self.label_visualization_area.height(),
+                                                                                   self.label_visualization_area.height()))
 
+        ####### Actions of the QActions (Menu Itens) ########
+        self.action_treemap.triggered.connect(lambda: self.show_treemap_or_grid_tab(0))
+        self.action_grid.triggered.connect(lambda: self.show_treemap_or_grid_tab(1))
+
+        # layout = QVBoxLayout(self.label_visualization_area)
+
+    def show_treemap_or_grid_tab(self, index_to_show):
+        '''
+        This method shows the treemap tab or the grid tab.
+        :param index_to_show: use 0 to show the treemap tab and 1 to show the grid tab
+        '''
+        if index_to_show == 0:
+            self.tab_widget_abas.setTabVisible(0, True)
+            self.tab_widget_abas.setTabVisible(1, False)
+            self.tab_widget_abas.setCurrentIndex(0)
+        else:
+            self.tab_widget_abas.setTabVisible(0, False)
+            self.tab_widget_abas.setTabVisible(1, True)
+            self.tab_widget_abas.setCurrentIndex(1)
+
+    def create_grid_image(self, rows, cols, width, height):
+        print(f'rows: {rows}, cols: {cols}, width: {width}, height: {height}')
+        
+        # Ajuste a largura e a altura para garantir divisão exata
+        adjusted_width = (width // cols) * cols
+        adjusted_height = (height // rows) * rows
+        
+        img = Image.new('RGB', (adjusted_width, adjusted_height), color='white')
+        print(f'img.size: {img.size}')
+        draw = ImageDraw.Draw(img)
+
+        distance_h = adjusted_height//rows
+        distance_w = adjusted_width//cols
+
+        for y in range(rows):
+            for x in range(cols):
+                draw.rectangle((distance_w*x, distance_h*y, distance_w*(x+1), distance_h*(y+1)), fill= 'white' , outline='black')
+                # draw.text((distance_w*x, distance_h*y), f'({x}, {y})', fill='black')
+
+        q_image = QImage(img.tobytes(), img.width, img.height, QImage.Format.Format_RGB888)
+        pixmap = QPixmap.fromImage(q_image)
+
+        self.label_visualization_area.setPixmap(pixmap)
+   
     def createSquarePixmap(self, drawable_area: QSize, color):
         pixmap = QPixmap(drawable_area)
         pixmap.fill(Qt.GlobalColor.transparent)#torna o fundo transparente da imagem
