@@ -1,7 +1,8 @@
 
 from view.main_screen import Ui_MainWindow
-from observer.file_selection_observable import File_Selection_Observable
-# from controller.business.treemap import Treemap
+from observer.file_observer import File_Observer
+# from controller.visualization_controller import Visualization_Controller
+# from model.dao.file_model import File_Model
 
 from PyQt6.QtCore import Qt, QRect, QSize
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon, QImage
@@ -12,15 +13,21 @@ from PIL import Image, ImageDraw
 
 import pandas as pd
 
-class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
+class Main (QMainWindow, Ui_MainWindow):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, controller=None, file_model=None):
         super().__init__(parent)
         self.setupUi(self)
         self.resizeEvent = self.on_resize #override the method resizeEvent to resize the splitter
-        self.showMaximized()       
+        self.showMaximized()    
+        ########## reference to the controller
+        self.controller = controller
+
+        ########## reference to the model and registering it to the observer ##########
+        if file_model != None:
+            self.file_model = file_model
+            self.file_model.attach_observer(self)
         
-        # layout.addWidget(self.label_visualization_area)
         ########## Hide the treemap tab ##########
         #tab 0: treemap
         #tab 1: grid
@@ -36,25 +43,23 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
         # self.statusBar().addWidget(self.progressBar)
         self.statusbar.hide()
         self.load_icons()
-        self.actionOpen_file.triggered.connect(self.on_open_file)
-        self.selected_file = None
-        File_Selection_Observable.__init__(self)
-        # self.label_visualization_area.setPixmap(
-        #     self.createSquarePixmap(
-        #         self.label_visualization_area.size(), 
-        #         QColor(105, 0, 50)
-        #     )
-        # )
-        ####### Actions of the buttons ########
-        self.push_button_view_grid.clicked.connect(lambda : self.create_grid_image(10, 10, 
-                                                                                   self.label_visualization_area.height(),
-                                                                                   self.label_visualization_area.height()))
+        # self.selected_file = None
+        # File_Observable.__init__(self)
+        
+        self.action_event_qaction()        
+        self.action_event_push_buttons()
 
-        ####### Actions of the QActions (Menu Itens) ########
+    def action_event_qaction(self):
+        ''' Actions of the QActions (Menu Itens) '''
+        self.action_open_file.triggered.connect(self.on_open_file)
         self.action_treemap.triggered.connect(lambda: self.show_treemap_or_grid_tab(0))
         self.action_grid.triggered.connect(lambda: self.show_treemap_or_grid_tab(1))
 
-        # layout = QVBoxLayout(self.label_visualization_area)
+    def action_event_push_buttons(self):
+        ''' Actions of the buttons '''
+        self.push_button_view_grid.clicked.connect(lambda : self.create_grid_image(10, 10, 
+                                                            self.label_visualization_area.height(),
+                                                            self.label_visualization_area.height()))
 
     def show_treemap_or_grid_tab(self, index_to_show):
         '''
@@ -71,7 +76,7 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
             self.tab_widget_abas.setCurrentIndex(1)
 
     def create_grid_image(self, rows, cols, width, height):
-        print(f'rows: {rows}, cols: {cols}, width: {width}, height: {height}')
+        #print(f'rows: {rows}, cols: {cols}, width: {width}, height: {height}')
         
         # Ajuste a largura e a altura para garantir divisão exata
         adjusted_width = (width // cols) * cols
@@ -156,21 +161,36 @@ class Main (QMainWindow, Ui_MainWindow, File_Selection_Observable):
         self.setWindowIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(32, 32)))
 
         icon = QIcon()
-        icon.addPixmap(QPixmap(r"\img\folder.png"), QIcon.Mode.Normal, QIcon.State.Off)
-        self.actionOpen_file.setIcon(icon)
+        icon.addPixmap(QPixmap(r"img/folder.png"), QIcon.Mode.Normal, QIcon.State.Off)
+        self.action_open_file.setIcon(icon)
     
     def on_open_file(self):        
         dialog = QFileDialog()
-        dialog.fileSelected.connect(self.handle_file_selection)
+        if self.controller != None:
+            dialog.fileSelected.connect(self.controller.handle_file_selection)
         dialog.exec()
 
-    def handle_file_selection(self, file_path):
-        print(f'File selected: {file_path}')
-        self.selected_file = file_path
-        self.notify_file_selected(file_path)
+    # def handle_file_selection(self, file_path):
+    #     # Esse metodo deveria estar no controller
 
-    def closeEvent(self, event):
-        self.notify_closing()
+    #     print(f'File selected: {file_path}')
+        # self.selected_file = file_path
+        # self.notify_file_selected(file_path)
+
+    # def closeEvent(self, event):
+    #     self.notify_closing()
+
+    ########## NOTIFICATION METHODS ##########
+    def update_file_selection(self, file_path):
+        '''Update the selected file and notify the model'''
+        if file_path not in ('', None):
+            self.selected_file = file_path
+            self.file_model.load_file(file_path)
+            # self.file_model.notify_file_selected(file_path)
+
+    def update_closing(self):
+        '''Notify the model that the window is closing'''
+        self.file_model.notify_closing()
 
 
     @property

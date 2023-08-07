@@ -8,33 +8,23 @@ from PyQt6.QtGui import QIcon, QPixmap
 import pandas as pd
 
 from view.main import Main
-from observer.file_selection_observer import File_Selection_Observer
+from model.dao.file_model import File_Model
+# from observer.file_observer import File_Observer
 
-class Visualization_Controller (File_Selection_Observer):
+class Visualization_Controller:
     def __init__(self):
+        self.file_model = File_Model()
         self.init_gui()
-        # self.selected_file = None
-
-    def update_file_selection(self, file_path):
-        self.selected_file = file_path
-        self.handle_file_selection()
-
-    def update_closing(self):
-        pass
 
     def init_gui(self):
         app = QApplication(sys.argv)
-        self.__main_view = Main()
-        self.__main_view.attach_observer(self)
-        self.__main_view.show()
+        self.main_view = Main(controller=self, file_model=self.file_model)
+        self.main_view.show()
         sys.exit(app.exec())
 
-    def handle_file_selection(self):
-        data = pd.read_csv(f'{self.__main_view.selected_file}', sep='\t', encoding='utf-8')
-
-        print(data.head(6))
-
-    
+    def handle_file_selection(self, file_path):
+        if file_path != None:
+            self.file_model.notify_file_selected(file_path)
 
 if __name__ == "__main__":
     # app = QtWidgets.QApplication(sys.argv)
