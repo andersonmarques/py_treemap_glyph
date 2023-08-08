@@ -148,7 +148,7 @@ background-position: center;</string>
          </font>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <widget class="QWidget" name="tab_treemap">
          <attribute name="title">
@@ -216,7 +216,7 @@ background-position: center;</string>
             <widget class="QComboBox" name="comboBox"/>
            </item>
            <item row="1" column="0" rowspan="3">
-            <widget class="QListWidget" name="listWidget">
+            <widget class="QListWidget" name="list_widget_attribute_treemap">
              <item>
               <property name="text">
                <string>teste</string>
@@ -329,7 +329,7 @@ background-position: center;</string>
             <widget class="QComboBox" name="comboBox_13"/>
            </item>
            <item row="1" column="0" rowspan="3">
-            <widget class="QListWidget" name="listWidget_7">
+            <widget class="QListWidget" name="list_widget_attribute_grid">
              <item>
               <property name="text">
                <string>teste</string>
@@ -353,7 +353,7 @@ background-position: center;</string>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QPushButton" name="push_button_direita_gird">
+            <widget class="QPushButton" name="push_button_direita_grid">
              <property name="text">
               <string/>
              </property>

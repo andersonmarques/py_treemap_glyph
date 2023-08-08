@@ -19,7 +19,11 @@ class File_Model (File_Observable):
             
             print(self.data_frame.head(6))
             return self.data_frame
-        
+    
+    def is_empty_columns(self):
+        '''Retorna True se o dataframe não tiver colunas'''
+        return self.data_frame.columns.empty
+    
     def get_columns(self):
         '''Retorna uma lista com os nomes das colunas do dataframe'''
         return self.data_frame.columns.tolist()
@@ -33,8 +37,9 @@ class File_Model (File_Observable):
         return self.data_frame[column].unique().tolist()
     
     def get_column_unique_values_count(self, column):
-        '''Retorna uma lista com os valores únicos da coluna do dataframe'''
-        return self.data_frame[column].value_counts().tolist()
+        '''Retorna a contagem de valores únicos da coluna do dataframe'''
+        print(f'TIPO: {type(self.data_frame[column].value_counts())}')
+        return self.data_frame[column].value_counts()
     
     def get_column_unique_values_count_dict(self, column):
         '''Retorna uma lista com os valores únicos da coluna do dataframe'''

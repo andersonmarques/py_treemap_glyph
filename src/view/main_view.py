@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw
 
 import pandas as pd
 
-class Main (QMainWindow, Ui_MainWindow):
+class Main_View (QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None, controller=None, file_model=None):
         super().__init__(parent)
@@ -76,7 +76,7 @@ class Main (QMainWindow, Ui_MainWindow):
             self.tab_widget_abas.setCurrentIndex(1)
 
     def create_grid_image(self, rows, cols, width, height):
-        #print(f'rows: {rows}, cols: {cols}, width: {width}, height: {height}')
+        print(f'rows: {rows}, cols: {cols}, width: {width}, height: {height}')
         
         # Ajuste a largura e a altura para garantir divisão exata
         adjusted_width = (width // cols) * cols
@@ -143,26 +143,32 @@ class Main (QMainWindow, Ui_MainWindow):
 
     def load_icons(self):
         img_up = QPixmap(r'img/setaUp.png').scaled(self.push_button_cima_treemap.width(),
-                                 self.push_button_cima_treemap.height(),
-                                    Qt.AspectRatioMode.KeepAspectRatio)
+                                                   self.push_button_cima_treemap.height(),
+                                                   Qt.AspectRatioMode.KeepAspectRatio)
         self.push_button_cima_treemap.setIcon(QIcon(img_up))
+        self.push_button_cima_grid.setIcon(QIcon(img_up))
+        
         img_down = QPixmap(r'img/setaDown.png').scaled(self.push_button_baixo_treemap.width(),
-                                    self.push_button_baixo_treemap.height(),
-                                    Qt.AspectRatioMode.KeepAspectRatio)
+                                                      self.push_button_baixo_treemap.height(),
+                                                      Qt.AspectRatioMode.KeepAspectRatio)
         self.push_button_baixo_treemap.setIcon(QIcon(img_down))
+        self.push_button_baixo_grid.setIcon(QIcon(img_down))
+        
         img_left = QPixmap(r'img/setaEsq.png').scaled(self.push_button_esquerda_treemap.width(),
-                                    self.push_button_esquerda_treemap.height(),
-                                    Qt.AspectRatioMode.KeepAspectRatio)
+                                                      self.push_button_esquerda_treemap.height(),
+                                                      Qt.AspectRatioMode.KeepAspectRatio)
         self.push_button_esquerda_treemap.setIcon(QIcon(img_left))
+        self.push_button_esquerda_grid.setIcon(QIcon(img_left))
+        
         img_right = QPixmap(r'img/setaDir.png').scaled(self.push_button_direita_treemap.width(),
-                                    self.push_button_direita_treemap.height(),
-                                    Qt.AspectRatioMode.KeepAspectRatio)
+                                                       self.push_button_direita_treemap.height(),
+                                                       Qt.AspectRatioMode.KeepAspectRatio)
         self.push_button_direita_treemap.setIcon(QIcon(img_right))
+        self.push_button_direita_grid.setIcon(QIcon(img_right))
+        
         self.setWindowIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(32, 32)))
-
-        icon = QIcon()
-        icon.addPixmap(QPixmap(r"img/folder.png"), QIcon.Mode.Normal, QIcon.State.Off)
-        self.action_open_file.setIcon(icon)
+        
+        self.action_open_file.setIcon(QIcon(QPixmap(r"img/folder.png")))
     
     def on_open_file(self):        
         dialog = QFileDialog()
@@ -170,15 +176,14 @@ class Main (QMainWindow, Ui_MainWindow):
             dialog.fileSelected.connect(self.controller.handle_file_selection)
         dialog.exec()
 
-    # def handle_file_selection(self, file_path):
-    #     # Esse metodo deveria estar no controller
+    def load_lists_widgets_grid(self, collumns: list):
+        self.list_widget_attribute_grid.clear()
+        self.list_widget_attribute_grid.addItems(collumns)
 
-    #     print(f'File selected: {file_path}')
-        # self.selected_file = file_path
-        # self.notify_file_selected(file_path)
+    def load_lists_widgets_treemap(self, collumns: list):
+        self.list_widget_attribute_treemap.clear()
+        self.list_widget_attribute_treemap.addItems(collumns)
 
-    # def closeEvent(self, event):
-    #     self.notify_closing()
 
     ########## NOTIFICATION METHODS ##########
     def update_file_selection(self, file_path):

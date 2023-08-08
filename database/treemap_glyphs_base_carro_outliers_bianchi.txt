@@ -1,5 +1,4 @@
 MARCA	COMBUSTIVEL	TURBO	NRPORTAS	TIPO	TRACAO	POSMOTOR	PESO	Quartil_peso	NRCILINDROS	POTENCIA	Quartil_potencia	RPM	Quartil_RPM	VALOR	Quartil_valor	ANO	ORIGEM
-String	String	String	Integer	String	String	String	Integer	String	Integer	Integer	String	Integer	String	Integer	String	Integer	String
 alfa-romeu	gasolina	sem	2	conversivel	traseira	frontal	2548	C	4	111	C	5000	C	13495	C	1986	Europeu
 alfa-romeu	gasolina	sem	2	conversivel	traseira	frontal	2548	C	4	111	C	5000	B	16500	B	1985	Europeu
 alfa-romeu	gasolina	sem	2	hatch	traseira	frontal	2823	C	6	154	B	5000	B	16500	B	1984	Europeu
