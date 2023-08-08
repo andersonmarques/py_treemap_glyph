@@ -41,7 +41,10 @@ class Visualization_Controller:
                 if quant_unique_values <= 10:
                     categorical_columns.append(column)
                 
-            self.main_view.load_lists_widgets_treemap(categorical_columns)
+            self.main_view.load_lists_widgets_treemap(sorted(categorical_columns))
+
+    # def set_attr_to_treemap_hierarchy(self, attr):
+    #     self.main_view.list_widget_hierarchy_treemap.
 
 if __name__ == "__main__":
     controller = Visualization_Controller()

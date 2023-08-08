@@ -216,21 +216,10 @@ background-position: center;</string>
             <widget class="QComboBox" name="comboBox"/>
            </item>
            <item row="1" column="0" rowspan="3">
-            <widget class="QListWidget" name="list_widget_attribute_treemap">
-             <item>
-              <property name="text">
-               <string>teste</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>teste2</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QListWidget" name="list_widget_attribute_treemap"/>
            </item>
            <item row="1" column="2" rowspan="3">
-            <widget class="QListWidget" name="listWidget_2"/>
+            <widget class="QListWidget" name="list_widget_hierarchy_treemap"/>
            </item>
            <item row="1" column="3">
             <widget class="QPushButton" name="push_button_cima_treemap">
@@ -329,18 +318,7 @@ background-position: center;</string>
             <widget class="QComboBox" name="comboBox_13"/>
            </item>
            <item row="1" column="0" rowspan="3">
-            <widget class="QListWidget" name="list_widget_attribute_grid">
-             <item>
-              <property name="text">
-               <string>teste</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>teste2</string>
-              </property>
-             </item>
-            </widget>
+            <widget class="QListWidget" name="list_widget_attribute_grid"/>
            </item>
            <item row="1" column="2" rowspan="3">
             <widget class="QListWidget" name="listWidget_8"/>

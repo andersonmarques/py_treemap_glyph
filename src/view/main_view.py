@@ -60,6 +60,7 @@ class Main_View (QMainWindow, Ui_MainWindow):
         self.push_button_view_grid.clicked.connect(lambda : self.create_grid_image(10, 10, 
                                                             self.label_visualization_area.height(),
                                                             self.label_visualization_area.height()))
+        self.push_button_direita_treemap.clicked.connect(self.choose_attr_to_treemap_hierarchy)
 
     def show_treemap_or_grid_tab(self, index_to_show):
         '''
@@ -99,6 +100,13 @@ class Main_View (QMainWindow, Ui_MainWindow):
 
         self.label_visualization_area.setPixmap(pixmap)
    
+    def choose_attr_to_treemap_hierarchy(self):
+        selected_attribute = self.list_widget_attribute_treemap.currentItem()
+        # self.controller.set_attr_to_treemap_hierarchy(selected_attribute)
+        if selected_attribute:
+            self.list_widget_hierarchy_treemap.addItem(selected_attribute.text())
+            self.list_widget_attribute_treemap.takeItem(self.list_widget_attribute_treemap.row(selected_attribute))
+
     def createSquarePixmap(self, drawable_area: QSize, color):
         pixmap = QPixmap(drawable_area)
         pixmap.fill(Qt.GlobalColor.transparent)#torna o fundo transparente da imagem
