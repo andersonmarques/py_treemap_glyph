@@ -17,7 +17,6 @@ class File_Model (File_Observable):
             self.file = file_path
             self.data_frame = pd.read_csv(f'{self.file}', sep='\t', encoding='utf-8')
             
-            print(self.data_frame.head(6))
             return self.data_frame
     
     def is_empty_columns(self):

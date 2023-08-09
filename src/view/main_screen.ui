@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1328</width>
+    <width>1297</width>
     <height>839</height>
    </rect>
   </property>
@@ -321,7 +321,7 @@ background-position: center;</string>
             <widget class="QListWidget" name="list_widget_attribute_grid"/>
            </item>
            <item row="1" column="2" rowspan="3">
-            <widget class="QListWidget" name="listWidget_8"/>
+            <widget class="QListWidget" name="list_widget_selected_attr"/>
            </item>
            <item row="1" column="3">
             <widget class="QPushButton" name="push_button_cima_grid">
@@ -366,20 +366,37 @@ background-position: center;</string>
          <widget class="QWidget" name="gridLayoutWidget_3">
           <property name="geometry">
            <rect>
-            <x>10</x>
-            <y>10</y>
-            <width>387</width>
+            <x>0</x>
+            <y>0</y>
+            <width>381</width>
             <height>280</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
-           <item row="5" column="3">
-            <widget class="QComboBox" name="comboBox_7"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_4">
+           <item row="2" column="3">
+            <widget class="QPushButton" name="push_button_baixo_cat">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2" rowspan="2">
+            <widget class="QListView" name="listView">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QComboBox" name="comboBox_8"/>
+           </item>
+           <item row="9" column="2" colspan="2">
+            <widget class="QPushButton" name="push_button_view_cat">
+             <property name="text">
+              <string>View Categorical Glyph</string>
              </property>
             </widget>
            </item>
@@ -390,53 +407,35 @@ background-position: center;</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="3">
-            <widget class="QComboBox" name="comboBox_9"/>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="comboBox_5"/>
-           </item>
-           <item row="2" column="3">
-            <widget class="QPushButton" name="pushButton_9">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_4">
              <property name="text">
-              <string>PushButton</string>
+              <string>TextLabel</string>
              </property>
             </widget>
+           </item>
+           <item row="5" column="3">
+            <widget class="QComboBox" name="comboBox_7"/>
            </item>
            <item row="6" column="1">
             <widget class="QComboBox" name="comboBox_4"/>
            </item>
-           <item row="3" column="1">
-            <widget class="QPushButton" name="pushButton_8">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
+           <item row="5" column="1">
+            <widget class="QComboBox" name="comboBox_5"/>
            </item>
-           <item row="3" column="3">
-            <widget class="QPushButton" name="pushButton_10">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
+           <item row="7" column="3">
+            <widget class="QComboBox" name="comboBox_9"/>
            </item>
            <item row="7" column="1">
             <widget class="QComboBox" name="comboBox_6"/>
            </item>
-           <item row="2" column="1">
-            <widget class="QPushButton" name="pushButton_7">
-             <property name="text">
-              <string>PushButton</string>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0" rowspan="2">
-            <widget class="QListWidget" name="listWidget_3"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="checkBox_2">
-             <property name="text">
-              <string>CheckBox</string>
+            <widget class="QListWidget" name="listWidget_3">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
              </property>
             </widget>
            </item>
@@ -447,20 +446,48 @@ background-position: center;</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="2" rowspan="2">
-            <widget class="QListView" name="listView"/>
-           </item>
-           <item row="6" column="3">
-            <widget class="QComboBox" name="comboBox_8"/>
-           </item>
-           <item row="8" column="2" colspan="2">
-            <widget class="QPushButton" name="pushButton_11">
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="checkBox_2">
              <property name="text">
-              <string>PushButton</string>
+              <string>CheckBox</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QPushButton" name="push_button_dir_cat">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="push_button_esq_cat">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QPushButton" name="push_button_cima_cat">
+             <property name="text">
+              <string/>
              </property>
             </widget>
            </item>
           </layout>
+         </widget>
+         <widget class="QPushButton" name="push_button_direita_grid_5">
+          <property name="geometry">
+           <rect>
+            <x>400</x>
+            <y>150</y>
+            <width>41</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
          </widget>
         </widget>
         <widget class="QWidget" name="tab_continuous_glyph">
@@ -473,7 +500,7 @@ background-position: center;</string>
             <x>10</x>
             <y>10</y>
             <width>387</width>
-            <height>231</height>
+            <height>261</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_5">
@@ -616,7 +643,7 @@ background-position: center;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1328</width>
+     <width>1297</width>
      <height>26</height>
     </rect>
    </property>

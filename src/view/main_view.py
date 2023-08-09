@@ -6,7 +6,7 @@ from observer.file_observer import File_Observer
 
 from PyQt6.QtCore import Qt, QRect, QSize
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon, QImage
-from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog, QVBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog, QVBoxLayout, QListWidget
 from PyQt6.QtGui import QPainter, QBrush, QColor
 
 from PIL import Image, ImageDraw
@@ -28,23 +28,21 @@ class Main_View (QMainWindow, Ui_MainWindow):
             self.file_model = file_model
             self.file_model.attach_observer(self)
         
-        ########## Hide the treemap tab ##########
+        ########## Hide the a tab ##########
         #tab 0: treemap
         #tab 1: grid
         #tab 3: categorical glyphs
         #tab 4: continuous glyphs
         #tab 5: details
         #tab 6: filters
-        self.tab_widget_abas.setTabVisible(0, False)
+        self.tab_widget_abas.setTabVisible(1, False)
 
         # self.progressBar = QProgressBar()
         # self.progressBar.setMaximum(100)
         # self.progressBar.setValue(0)
         # self.statusBar().addWidget(self.progressBar)
         self.statusbar.hide()
-        self.load_icons()
-        # self.selected_file = None
-        # File_Observable.__init__(self)
+        self.load_icons_on_gui()
         
         self.action_event_qaction()        
         self.action_event_push_buttons()
@@ -61,6 +59,39 @@ class Main_View (QMainWindow, Ui_MainWindow):
                                                             self.label_visualization_area.height(),
                                                             self.label_visualization_area.height()))
         self.push_button_direita_treemap.clicked.connect(self.choose_attr_to_treemap_hierarchy)
+        self.push_button_esquerda_treemap.clicked.connect(self.remove_attr_from_treemap_hierarchy)
+        self.push_button_baixo_treemap.clicked.connect(lambda : self.change_list_widget_item_order(0, self.list_widget_hierarchy_treemap))
+        self.push_button_cima_treemap.clicked.connect(lambda : self.change_list_widget_item_order(1, self.list_widget_hierarchy_treemap))
+        self.push_button_direita_grid.clicked.connect(self.choose_attr_to_grid)
+        self.push_button_esquerda_grid.clicked.connect(self.remove_attr_from_grid)
+        self.push_button_baixo_grid.clicked.connect(lambda : self.change_list_widget_item_order(0, self.list_widget_selected_attr))
+        self.push_button_cima_grid.clicked.connect(lambda : self.change_list_widget_item_order(1, self.list_widget_selected_attr))
+
+    def change_list_widget_item_order(self, direction:int, list_widget:QListWidget):
+        ''' 
+        This method changes the order of the attributes in the treemap hierarchy.
+        :param direction: 0 to down and 1 to up
+        '''
+        current_index = list_widget.currentRow()
+        
+        if direction == 0:#down
+            if current_index >= 0:
+                if current_index < list_widget.count() - 1:
+                    list_widget.insertItem(current_index + 1, list_widget.takeItem(current_index))
+                    list_widget.setCurrentRow(current_index + 1)
+            # else:
+            #     if current_index > 0:
+            #         list_widget.insertItem(current_index - 1, list_widget.takeItem(current_index))
+            #         list_widget.setCurrentRow(current_index - 1)
+        else:#direction == 1 #up
+            if current_index >= 0:
+                if current_index > 0:
+                    list_widget.insertItem(current_index - 1, list_widget.takeItem(current_index))
+                    list_widget.setCurrentRow(current_index - 1)
+            # else:
+            #     if current_index < list_widget.count() - 1:
+            #         list_widget.insertItem(current_index + 1, list_widget.takeItem(current_index))
+            
 
     def show_treemap_or_grid_tab(self, index_to_show):
         '''
@@ -99,13 +130,32 @@ class Main_View (QMainWindow, Ui_MainWindow):
         pixmap = QPixmap.fromImage(q_image)
 
         self.label_visualization_area.setPixmap(pixmap)
+
+    def choose_attr_to_grid(self):
+        selected_attribute = self.list_widget_attribute_grid.currentItem()
+        if selected_attribute:
+            self.list_widget_selected_attr.addItem(selected_attribute.text())
+            self.list_widget_attribute_grid.takeItem(self.list_widget_attribute_grid.row(selected_attribute))
    
+    def remove_attr_from_grid(self):
+        selected_attribute = self.list_widget_selected_attr.currentItem()
+        if selected_attribute:
+            self.list_widget_attribute_grid.addItem(selected_attribute.text())
+            self.list_widget_selected_attr.takeItem(self.list_widget_selected_attr.row(selected_attribute)) 
+            self.list_widget_attribute_grid.sortItems()       
+
     def choose_attr_to_treemap_hierarchy(self):
         selected_attribute = self.list_widget_attribute_treemap.currentItem()
-        # self.controller.set_attr_to_treemap_hierarchy(selected_attribute)
         if selected_attribute:
             self.list_widget_hierarchy_treemap.addItem(selected_attribute.text())
             self.list_widget_attribute_treemap.takeItem(self.list_widget_attribute_treemap.row(selected_attribute))
+
+    def remove_attr_from_treemap_hierarchy(self):
+        selected_attribute = self.list_widget_hierarchy_treemap.currentItem()
+        if selected_attribute:
+            self.list_widget_attribute_treemap.addItem(selected_attribute.text())
+            self.list_widget_hierarchy_treemap.takeItem(self.list_widget_hierarchy_treemap.row(selected_attribute))
+            self.list_widget_attribute_treemap.sortItems()
 
     def createSquarePixmap(self, drawable_area: QSize, color):
         pixmap = QPixmap(drawable_area)
@@ -142,38 +192,30 @@ class Main_View (QMainWindow, Ui_MainWindow):
 
     def on_resize(self, a0: QResizeEvent):
         size = a0.size()
-        left = int(size.width() * 0.75)
-        right = int(size.width() * 0.25)
+        left = int(size.width() * 0.79)
+        right = int(size.width() * 0.21)
         self.splitter_esq_dir.setGeometry(0, 0, size.width(), size.height())
         self.splitter_esq_dir.setSizes([left, right])
         self.label_visualization_area.setGeometry(self.splitter_esq_dir.geometry())
         super().resizeEvent(a0)
 
-    def load_icons(self):
-        img_up = QPixmap(r'img/setaUp.png').scaled(self.push_button_cima_treemap.width(),
-                                                   self.push_button_cima_treemap.height(),
-                                                   Qt.AspectRatioMode.KeepAspectRatio)
-        self.push_button_cima_treemap.setIcon(QIcon(img_up))
-        self.push_button_cima_grid.setIcon(QIcon(img_up))
-        
-        img_down = QPixmap(r'img/setaDown.png').scaled(self.push_button_baixo_treemap.width(),
-                                                      self.push_button_baixo_treemap.height(),
-                                                      Qt.AspectRatioMode.KeepAspectRatio)
-        self.push_button_baixo_treemap.setIcon(QIcon(img_down))
-        self.push_button_baixo_grid.setIcon(QIcon(img_down))
-        
-        img_left = QPixmap(r'img/setaEsq.png').scaled(self.push_button_esquerda_treemap.width(),
-                                                      self.push_button_esquerda_treemap.height(),
-                                                      Qt.AspectRatioMode.KeepAspectRatio)
-        self.push_button_esquerda_treemap.setIcon(QIcon(img_left))
-        self.push_button_esquerda_grid.setIcon(QIcon(img_left))
-        
-        img_right = QPixmap(r'img/setaDir.png').scaled(self.push_button_direita_treemap.width(),
-                                                       self.push_button_direita_treemap.height(),
-                                                       Qt.AspectRatioMode.KeepAspectRatio)
-        self.push_button_direita_treemap.setIcon(QIcon(img_right))
-        self.push_button_direita_grid.setIcon(QIcon(img_right))
-        
+    def load_icon_buttons(self, button, path: str):
+        img = QPixmap(path).scaled(button.width(), button.height(), Qt.AspectRatioMode.KeepAspectRatio)
+        button.setIcon(QIcon(img))
+
+    def load_icons_on_gui(self):
+        self.load_icon_buttons(self.push_button_cima_treemap, r'img/setaUp.png')
+        self.load_icon_buttons(self.push_button_baixo_treemap, r'img/setaDown.png')
+        self.load_icon_buttons(self.push_button_cima_grid, r'img/setaUp.png')
+        self.load_icon_buttons(self.push_button_baixo_grid, r'img/setaDown.png')
+        self.load_icon_buttons(self.push_button_esquerda_treemap, r'img/setaEsq.png')
+        self.load_icon_buttons(self.push_button_esquerda_grid, r'img/setaEsq.png')
+        self.load_icon_buttons(self.push_button_direita_treemap, r'img/setaDir.png')
+        self.load_icon_buttons(self.push_button_direita_grid, r'img/setaDir.png')
+        self.load_icon_buttons(self.push_button_dir_cat, r'img/setaDir.png')
+        self.load_icon_buttons(self.push_button_esq_cat, r'img/setaEsq.png')
+        self.load_icon_buttons(self.push_button_baixo_cat, r'img/setaDown.png')
+        self.load_icon_buttons(self.push_button_cima_cat, r'img/setaUp.png')
         self.setWindowIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(32, 32)))
         
         self.action_open_file.setIcon(QIcon(QPixmap(r"img/folder.png")))
