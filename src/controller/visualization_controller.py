@@ -16,7 +16,15 @@ class Visualization_Controller:
         app = QApplication(sys.argv)
         self.main_view = Main_View(controller=self, file_model=self.file_model)
         self.main_view.show()
+        self.carregar_arquivo_estilo('../css/style.qss', app)
         sys.exit(app.exec())
+
+    def carregar_arquivo_estilo(self, file_path, aplicacao):
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        style_path = os.path.join(current_directory, file_path)
+        with open(style_path, 'r') as style_file:
+            style = style_file.read()
+        aplicacao.setStyleSheet(style)
 
     def handle_file_selection(self, file_path):
         if file_path != None:

@@ -43,6 +43,11 @@ class Ui_MainWindow(object):
         self.frame_visualization.setObjectName("frame_visualization")
         self.label_visualization_area = QtWidgets.QLabel(parent=self.frame_visualization)
         self.label_visualization_area.setGeometry(QtCore.QRect(0, 60, 621, 481))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_visualization_area.sizePolicy().hasHeightForWidth())
+        self.label_visualization_area.setSizePolicy(sizePolicy)
         self.label_visualization_area.setStyleSheet("background-color: rgb(170, 255, 255);\n"
 "background-repeat: no-repeat;\n"
 "background-position: center;")
@@ -109,7 +114,55 @@ class Ui_MainWindow(object):
         self.comboBox_2.setObjectName("comboBox_2")
         self.gridLayout_3.addWidget(self.comboBox_2, 6, 1, 1, 2)
         self.comboBox = QtWidgets.QComboBox(parent=self.formLayoutWidget)
+        self.comboBox.setStyleSheet("/* Style for the QComboBox */\n"
+"#comboBox{\n"
+"    border: 1px solid #ced4da;\n"
+"    border-radius: 4px;\n"
+"    padding-left: 10px;\n"
+"}\n"
+"\n"
+"/* style for drop down arrow*/\n"
+"#comboBox::down-arrow{\n"
+"    width: 12px;\n"
+"    height: 12px;\n"
+"    margin-right: 15px;\n"
+"}\n"
+"\n"
+"\n"
+"/* style for QComboBox after select menu*/\n"
+"#comboBox:on{\n"
+"    border: 4px solid #c2bdfe;\n"
+"}\n"
+"\n"
+"/* style for list menu */\n"
+"#comboBox QListview{\n"
+"    font-size: 12px;\n"
+"    border: 1px solid rgba(0,0,0,10%);\n"
+"    padding:5px;\n"
+"    background-color: #c2bdfe;\n"
+"    outline: 0px;\n"
+"}\n"
+"\n"
+"/* style for list items */\n"
+"#comboBox QListView:item{\n"
+"    padding-left: 10px;\n"
+"    background-color: #fff;\n"
+"    color: black;\n"
+"}\n"
+"\n"
+"#comboBox QListView:item:hover{\n"
+"    background-color: #f0f8ff;\n"
+"    color: black;\n"
+"}\n"
+"\n"
+"#comboBOx QListView::item:selected{\n"
+"    background-color: #1e90ff;\n"
+"    color: white;\n"
+"}")
         self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
         self.gridLayout_3.addWidget(self.comboBox, 5, 1, 1, 2)
         self.list_widget_attribute_treemap = QtWidgets.QListWidget(parent=self.formLayoutWidget)
         self.list_widget_attribute_treemap.setObjectName("list_widget_attribute_treemap")
@@ -198,7 +251,7 @@ class Ui_MainWindow(object):
         self.tab_categorical_glyph.setFont(font)
         self.tab_categorical_glyph.setObjectName("tab_categorical_glyph")
         self.gridLayoutWidget_3 = QtWidgets.QWidget(parent=self.tab_categorical_glyph)
-        self.gridLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 381, 280))
+        self.gridLayoutWidget_3.setGeometry(QtCore.QRect(0, 0, 522, 280))
         self.gridLayoutWidget_3.setObjectName("gridLayoutWidget_3")
         self.gridLayout_4 = QtWidgets.QGridLayout(self.gridLayoutWidget_3)
         self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
@@ -394,6 +447,9 @@ class Ui_MainWindow(object):
         self.checkBox.setText(_translate("MainWindow", "Label:"))
         self.label.setText(_translate("MainWindow", "Avaliable Attributes:"))
         self.pushButton_2.setText(_translate("MainWindow", "View Treemap"))
+        self.comboBox.setItemText(0, _translate("MainWindow", "New Item"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "New Item"))
+        self.comboBox.setItemText(2, _translate("MainWindow", "New Item"))
         self.tab_widget_abas.setTabText(self.tab_widget_abas.indexOf(self.tab_treemap), _translate("MainWindow", "Treemap"))
         self.pushButton_3.setText(_translate("MainWindow", "Color:"))
         self.label_8.setText(_translate("MainWindow", "Size:"))
