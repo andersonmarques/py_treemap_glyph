@@ -8,6 +8,7 @@ from PyQt6.QtCore import Qt, QRect, QSize
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon, QImage
 from PyQt6.QtWidgets import QMainWindow, QProgressBar, QFileDialog, QVBoxLayout, QListWidget
 from PyQt6.QtGui import QPainter, QBrush, QColor
+from PyQt6 import QtWidgets
 
 from PIL import Image, ImageDraw
 
@@ -204,21 +205,34 @@ class Main_View (QMainWindow, Ui_MainWindow):
         button.setIcon(QIcon(img))
 
     def load_icons_on_gui(self):
-        self.load_icon_buttons(self.push_button_cima_treemap, r'img/setaUp.png')
-        self.load_icon_buttons(self.push_button_baixo_treemap, r'img/setaDown.png')
-        self.load_icon_buttons(self.push_button_cima_grid, r'img/setaUp.png')
-        self.load_icon_buttons(self.push_button_baixo_grid, r'img/setaDown.png')
-        self.load_icon_buttons(self.push_button_esquerda_treemap, r'img/setaEsq.png')
-        self.load_icon_buttons(self.push_button_esquerda_grid, r'img/setaEsq.png')
-        self.load_icon_buttons(self.push_button_direita_treemap, r'img/setaDir.png')
-        self.load_icon_buttons(self.push_button_direita_grid, r'img/setaDir.png')
-        self.load_icon_buttons(self.push_button_dir_cat, r'img/setaDir.png')
-        self.load_icon_buttons(self.push_button_esq_cat, r'img/setaEsq.png')
-        self.load_icon_buttons(self.push_button_baixo_cat, r'img/setaDown.png')
-        self.load_icon_buttons(self.push_button_cima_cat, r'img/setaUp.png')
+        # self.load_icon_buttons(self.push_button_cima_treemap, r'img/setaUp.png')
+        self.push_button_cima_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
+        # self.load_icon_buttons(self.push_button_baixo_treemap, r'img/setaDown.png')
+        self.push_button_baixo_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
+        # self.load_icon_buttons(self.push_button_cima_grid, r'img/setaUp.png')
+        self.push_button_cima_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
+        # self.load_icon_buttons(self.push_button_baixo_grid, r'img/setaDown.png')
+        self.push_button_baixo_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
+        # self.load_icon_buttons(self.push_button_esquerda_treemap, r'img/setaEsq.png')
+        self.push_button_esquerda_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowLeft))
+        # self.load_icon_buttons(self.push_button_esquerda_grid, r'img/setaEsq.png')
+        self.push_button_esquerda_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowLeft))
+        # self.load_icon_buttons(self.push_button_direita_treemap, r'img/setaDir.png')
+        self.push_button_direita_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowRight))
+        # self.load_icon_buttons(self.push_button_direita_grid, r'img/setaDir.png')
+        self.push_button_direita_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowRight))
+        # self.load_icon_buttons(self.push_button_dir_cat, r'img/setaDir.png')
+        self.push_button_dir_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowRight))
+        # self.load_icon_buttons(self.push_button_esq_cat, r'img/setaEsq.png')
+        self.push_button_esq_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowLeft))
+        # self.load_icon_buttons(self.push_button_baixo_cat, r'img/setaDown.png')
+        self.push_button_baixo_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowDown))
+        # self.load_icon_buttons(self.push_button_cima_cat, r'img/setaUp.png')
+        self.push_button_cima_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
         self.setWindowIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(32, 32)))
         
-        self.action_open_file.setIcon(QIcon(QPixmap(r"img/folder.png")))
+        # self.action_open_file.setIcon(QIcon(QPixmap(r"img/folder.png")))
+        self.action_open_file.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_DirOpenIcon))
     
     def on_open_file(self):        
         dialog = QFileDialog()
