@@ -255,8 +255,9 @@ class MainView (QMainWindow, Ui_MainWindow):
 
     def load_combobox_label_treemap(self, collumns: list):
         self.combo_box_label_treemap.clear()
-        
+        self.combo_box_label_treemap.addItem('---')
         self.combo_box_label_treemap.addItems(collumns)
+        self.combo_box_label_treemap.removeItem(self.combo_box_label_treemap.count() - 1)
 
 
     ########## NOTIFICATION METHODS ##########
