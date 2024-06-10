@@ -1,8 +1,9 @@
 
-from view.main_screen import Ui_MainWindow
+from view.qtdesigner_screen import Ui_MainWindow
 from observer.file_observer import File_Observer
 # from controller.visualization_controller import Visualization_Controller
 # from model.dao.file_model import File_Model
+import util.contants as const
 
 from PyQt6.QtCore import Qt, QRect, QSize
 from PyQt6.QtGui import QResizeEvent,QPixmap, QIcon, QImage
@@ -14,7 +15,7 @@ from PIL import Image, ImageDraw
 
 import pandas as pd
 
-class Main_View (QMainWindow, Ui_MainWindow):
+class MainView (QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None, controller=None, file_model=None):
         super().__init__(parent)
@@ -26,8 +27,8 @@ class Main_View (QMainWindow, Ui_MainWindow):
 
         ########## reference to the model and registering it to the observer ##########
         if file_model != None:
-            self.file_model = file_model
-            self.file_model.attach_observer(self)
+            self.data_loader_model = file_model
+            self.data_loader_model.attach_observer(self)
         
         ########## Hide the a tab ##########
         #tab 0: treemap
@@ -51,8 +52,8 @@ class Main_View (QMainWindow, Ui_MainWindow):
     def action_event_qaction(self):
         ''' Actions of the QActions (Menu Itens) '''
         self.action_open_file.triggered.connect(self.on_open_file)
-        self.action_treemap.triggered.connect(lambda: self.show_treemap_or_grid_tab(0))
-        self.action_grid.triggered.connect(lambda: self.show_treemap_or_grid_tab(1))
+        self.action_treemap.triggered.connect(lambda: self.switch_visualization_tab(0))
+        self.action_grid.triggered.connect(lambda: self.switch_visualization_tab(1))
 
     def action_event_push_buttons(self):
         ''' Actions of the buttons '''
@@ -69,9 +70,11 @@ class Main_View (QMainWindow, Ui_MainWindow):
         self.push_button_cima_grid.clicked.connect(lambda : self.change_list_widget_item_order(1, self.list_widget_selected_attr))
 
     def change_list_widget_item_order(self, direction:int, list_widget:QListWidget):
-        ''' 
+        '''
         This method changes the order of the attributes in the treemap hierarchy.
-        :param direction: 0 to down and 1 to up
+        ### Args:   
+            direction (int): 0 to down and 1 to up
+            list_widget (QListWidget): the list widget to change the order
         '''
         current_index = list_widget.currentRow()
         
@@ -80,35 +83,35 @@ class Main_View (QMainWindow, Ui_MainWindow):
                 if current_index < list_widget.count() - 1:
                     list_widget.insertItem(current_index + 1, list_widget.takeItem(current_index))
                     list_widget.setCurrentRow(current_index + 1)
-            # else:
-            #     if current_index > 0:
-            #         list_widget.insertItem(current_index - 1, list_widget.takeItem(current_index))
-            #         list_widget.setCurrentRow(current_index - 1)
         else:#direction == 1 #up
             if current_index >= 0:
                 if current_index > 0:
                     list_widget.insertItem(current_index - 1, list_widget.takeItem(current_index))
-                    list_widget.setCurrentRow(current_index - 1)
-            # else:
-            #     if current_index < list_widget.count() - 1:
-            #         list_widget.insertItem(current_index + 1, list_widget.takeItem(current_index))
-            
+                    list_widget.setCurrentRow(current_index - 1)            
 
-    def show_treemap_or_grid_tab(self, index_to_show):
+    def switch_visualization_tab(self, visualization):
         '''
         This method shows the treemap tab or the grid tab.
-        :param index_to_show: use 0 to show the treemap tab and 1 to show the grid tab
+        ### Args:
+        visualization (int): use 0 to show the treemap tab and 1 to show the grid tab
         '''
-        if index_to_show == 0:
-            self.tab_widget_abas.setTabVisible(0, True)
-            self.tab_widget_abas.setTabVisible(1, False)
-            self.tab_widget_abas.setCurrentIndex(0)
+        if visualization == const.TREEMAP:
+            self.tab_widget_abas.setTabVisible(const.TREEMAP, True)
+            self.tab_widget_abas.setTabVisible(const.GRID, False)
+            self.tab_widget_abas.setCurrentIndex(const.TREEMAP)
         else:
-            self.tab_widget_abas.setTabVisible(0, False)
-            self.tab_widget_abas.setTabVisible(1, True)
-            self.tab_widget_abas.setCurrentIndex(1)
+            self.tab_widget_abas.setTabVisible(const.TREEMAP, False)
+            self.tab_widget_abas.setTabVisible(const.GRID, True)
+            self.tab_widget_abas.setCurrentIndex(const.GRID)
 
     def create_grid_image(self, rows, cols, width, height):
+        '''Create a grid image with the specified number of rows and columns.
+        ### Args:
+        rows (int): number of rows
+        cols (int): number of columns
+        width (int): width of the image
+        height (int): height of the image
+        '''
         print(f'rows: {rows}, cols: {cols}, width: {width}, height: {height}')
         
         # Ajuste a largura e a altura para garantir divisão exata
@@ -133,10 +136,13 @@ class Main_View (QMainWindow, Ui_MainWindow):
         self.label_visualization_area.setPixmap(pixmap)
 
     def choose_attr_to_grid(self):
-        selected_attribute = self.list_widget_attribute_grid.currentItem()
-        if selected_attribute:
-            self.list_widget_selected_attr.addItem(selected_attribute.text())
-            self.list_widget_attribute_grid.takeItem(self.list_widget_attribute_grid.row(selected_attribute))
+        '''
+        This method get the selected attribute from the attribute list and add it to the selected attributes list.
+        '''
+        selected_attribute = self.list_widget_attribute_grid.currentItem()#get the selected attribute
+        if selected_attribute:#if there is a selected attribute
+            self.list_widget_selected_attr.addItem(selected_attribute.text()) #add the selected attribute to the selected attributes list
+            self.list_widget_attribute_grid.takeItem(self.list_widget_attribute_grid.row(selected_attribute))#remove the selected attribute from the attribute list
    
     def remove_attr_from_grid(self):
         selected_attribute = self.list_widget_selected_attr.currentItem()
@@ -205,40 +211,39 @@ class Main_View (QMainWindow, Ui_MainWindow):
         button.setIcon(QIcon(img))
 
     def load_icons_on_gui(self):
-        # self.load_icon_buttons(self.push_button_cima_treemap, r'img/setaUp.png')
         self.push_button_cima_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
-        # self.load_icon_buttons(self.push_button_baixo_treemap, r'img/setaDown.png')
-        self.push_button_baixo_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
-        # self.load_icon_buttons(self.push_button_cima_grid, r'img/setaUp.png')
+        self.push_button_baixo_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowDown))
         self.push_button_cima_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
-        # self.load_icon_buttons(self.push_button_baixo_grid, r'img/setaDown.png')
-        self.push_button_baixo_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
-        # self.load_icon_buttons(self.push_button_esquerda_treemap, r'img/setaEsq.png')
+        self.push_button_baixo_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowDown))
         self.push_button_esquerda_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowLeft))
-        # self.load_icon_buttons(self.push_button_esquerda_grid, r'img/setaEsq.png')
         self.push_button_esquerda_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowLeft))
-        # self.load_icon_buttons(self.push_button_direita_treemap, r'img/setaDir.png')
         self.push_button_direita_treemap.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowRight))
-        # self.load_icon_buttons(self.push_button_direita_grid, r'img/setaDir.png')
         self.push_button_direita_grid.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowRight))
-        # self.load_icon_buttons(self.push_button_dir_cat, r'img/setaDir.png')
         self.push_button_dir_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowRight))
-        # self.load_icon_buttons(self.push_button_esq_cat, r'img/setaEsq.png')
         self.push_button_esq_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowLeft))
-        # self.load_icon_buttons(self.push_button_baixo_cat, r'img/setaDown.png')
         self.push_button_baixo_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowDown))
-        # self.load_icon_buttons(self.push_button_cima_cat, r'img/setaUp.png')
         self.push_button_cima_cat.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_ArrowUp))
         self.setWindowIcon(QIcon(QPixmap(r'img\treemap_glyph_logo.png').scaled(32, 32)))
         
-        # self.action_open_file.setIcon(QIcon(QPixmap(r"img/folder.png")))
         self.action_open_file.setIcon(self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_DirOpenIcon))
     
     def on_open_file(self):        
         dialog = QFileDialog()
         if self.controller != None:
+            # The user-selected file will be passed automatically to the method handle_file_selection
             dialog.fileSelected.connect(self.controller.handle_file_selection)
         dialog.exec()
+
+    def load_attributes_on_gui(self):
+        '''Load the attributes from the selected file in the list widgets'''
+        if self.data_loader_model != None:
+            attributes = self.data_loader_model.get_columns()
+            # self.load_lists_widgets_grid(attributes)
+            self.load_lists_widgets_atttribute_treemap()
+            self.load_combobox_label_treemap(attributes)
+    
+    def load_lists_widgets_atttribute_treemap(self):                
+        self.load_lists_widgets_treemap(sorted(self.data_loader_model.categorical_columns))
 
     def load_lists_widgets_grid(self, collumns: list):
         self.list_widget_attribute_grid.clear()
@@ -248,18 +253,26 @@ class Main_View (QMainWindow, Ui_MainWindow):
         self.list_widget_attribute_treemap.clear()
         self.list_widget_attribute_treemap.addItems(collumns)
 
+    def load_combobox_label_treemap(self, collumns: list):
+        self.combo_box_label_treemap.clear()
+        
+        self.combo_box_label_treemap.addItems(collumns)
+
 
     ########## NOTIFICATION METHODS ##########
     def update_file_selection(self, file_path):
-        '''Update the selected file and notify the model'''
+        '''Update the selected file and notify the model
+        ### Args:
+        file_path (str): the path of the selected file
+        '''
         if file_path not in ('', None):
             self.selected_file = file_path
-            self.file_model.load_file(file_path)
+            self.data_loader_model.load_file(file_path)
             # self.file_model.notify_file_selected(file_path)
 
     def update_closing(self):
         '''Notify the model that the window is closing'''
-        self.file_model.notify_closing()
+        self.data_loader_model.notify_closing()
 
 
     @property

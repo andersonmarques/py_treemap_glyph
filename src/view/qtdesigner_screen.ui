@@ -171,7 +171,7 @@ background-position: center;</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
            <item row="7" column="0">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="push_button_change_color_treemap">
              <property name="text">
               <string>Color:</string>
              </property>
@@ -192,7 +192,7 @@ background-position: center;</string>
             </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QCheckBox" name="checkBox">
+            <widget class="QCheckBox" name="check_box_has_label_treemap">
              <property name="text">
               <string>Label:</string>
              </property>
@@ -206,20 +206,20 @@ background-position: center;</string>
             </widget>
            </item>
            <item row="8" column="1" colspan="2">
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="push_button_view_treemap">
              <property name="text">
               <string>View Treemap</string>
              </property>
             </widget>
            </item>
            <item row="7" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_3"/>
+            <widget class="QComboBox" name="combo_box_color_treemap"/>
            </item>
            <item row="6" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox_2"/>
+            <widget class="QComboBox" name="combo_box_size_treemap"/>
            </item>
            <item row="5" column="1" colspan="2">
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="combo_box_label_treemap">
              <property name="styleSheet">
               <string notr="true"/>
              </property>
@@ -734,8 +734,6 @@ background-position: center;</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../../img/img_.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

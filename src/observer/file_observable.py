@@ -1,6 +1,6 @@
 
 
-class File_Observable:
+class FileObservable:
     def __init__(self):
         self.observers = []
 
