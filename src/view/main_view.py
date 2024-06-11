@@ -238,9 +238,16 @@ class MainView (QMainWindow, Ui_MainWindow):
         '''Load the attributes from the selected file in the list widgets'''
         if self.data_loader_model != None:
             attributes = self.data_loader_model.get_columns()
-            # self.load_lists_widgets_grid(attributes)
+            # grid widgets
+            self.load_lists_widgets_attribute_grid()
+            # Treemap widgets
             self.load_lists_widgets_atttribute_treemap()
             self.load_combobox_label_treemap(attributes)
+            self.load_combobox_size_treemap(sorted(self.data_loader_model.numerical_columns))
+    
+    def load_lists_widgets_attribute_grid(self):
+        if not self.data_loader_model.is_empty_columns():
+            self.load_lists_widgets_grid(sorted(self.data_loader_model.categorical_columns))
     
     def load_lists_widgets_atttribute_treemap(self):                
         self.load_lists_widgets_treemap(sorted(self.data_loader_model.categorical_columns))
@@ -248,6 +255,7 @@ class MainView (QMainWindow, Ui_MainWindow):
     def load_lists_widgets_grid(self, collumns: list):
         self.list_widget_attribute_grid.clear()
         self.list_widget_attribute_grid.addItems(collumns)
+        # self.list_widget_attribute_grid.removeItemWidget(self.list_widget_attribute_grid.count() - 1)
 
     def load_lists_widgets_treemap(self, collumns: list):
         self.list_widget_attribute_treemap.clear()
@@ -258,6 +266,12 @@ class MainView (QMainWindow, Ui_MainWindow):
         self.combo_box_label_treemap.addItem('---')
         self.combo_box_label_treemap.addItems(collumns)
         self.combo_box_label_treemap.removeItem(self.combo_box_label_treemap.count() - 1)
+
+    def load_combobox_size_treemap(self,collumns):
+        self.combo_box_size_treemap.clear()
+        self.combo_box_size_treemap.addItem('---')
+        self.combo_box_size_treemap.addItems(collumns)
+        # self.combo_box_size_treemap.removeItem(self.combo_box_size_treemap.count() - 1)
 
 
     ########## NOTIFICATION METHODS ##########

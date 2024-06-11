@@ -10,6 +10,7 @@ class DataLoaderModel (FileObservable):
         # self.__df_same_size: pd.DataFrame = pd.DataFrame()
         self.file = file
         self.categorical_columns = []
+        self.numerical_columns = []
 
     def load_file(self, file_path):
         if file_path is None:
@@ -19,6 +20,7 @@ class DataLoaderModel (FileObservable):
             self.data_frame = pd.read_csv(f'{self.file}', sep='\t', encoding='utf-8')
             # print(f'Passou aqui para carregar o arquivo {self.file}.')
             self.categorical_columns = self.get_categorical_columns()
+            self.numerical_columns = self.get_numerical_columns()
             return self.data_frame
     
     def is_empty_columns(self):
@@ -105,7 +107,7 @@ class DataLoaderModel (FileObservable):
     
     def get_categorical_columns(self) -> list:
         '''
-        Methods to get all categorical columns from the dataframe
+        Method to get all categorical columns from the dataframe
 
         ### Returns:
         - list: List with all categorical columns from the dataframe
@@ -117,6 +119,23 @@ class DataLoaderModel (FileObservable):
                     categorical_columns.append(column)
         return categorical_columns
     
+    def get_numerical_columns(self):
+        '''
+        Method to get all numerical columns from the dataframe
+
+        ### Returns:
+        - list: List with all numerical columns from the dataframe
+        '''
+        numerical_columns = []
+        if not self.is_empty_columns():
+            for column in self.get_columns():
+                if column not in self.categorical_columns:
+                    tipo = self.data_frame[column].dtype # getting the type of the column
+                    if tipo not in (str, object):
+                        # print(f'Nome: {column} - {self.get_column_type(column)}')                    
+                        numerical_columns.append(column)
+        return numerical_columns
+        
     ################ Properties ########################
 
     @property
@@ -144,6 +163,14 @@ class DataLoaderModel (FileObservable):
     @categorical_columns.setter
     def categorical_columns(self, columns):
         self.__categorical_columns = columns
+
+    @property
+    def numerical_columns(self):
+        return self.__numerical_columns
+    
+    @numerical_columns.setter
+    def numerical_columns(self, columns):
+        self.__numerical_columns = columns
 
     # @property
     # def df_same_size(self):

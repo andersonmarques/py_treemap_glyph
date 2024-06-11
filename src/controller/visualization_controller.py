@@ -39,20 +39,9 @@ class VisualizationController:
             # self.load_lists_widgets_treemap()
 
 
-    def load_lists_widgets_grid(self):
-        if not self.data_loader_model.is_empty_columns():
-            self.main_view.load_lists_widgets_grid(sorted(self.data_loader_model.get_columns()))
+    
 
-    # def load_lists_widgets_treemap(self):
-    #     # categorical_columns = []
-    #     # if not self.data_loader_model.is_empty_columns():
-    #     #     for column in self.data_loader_model.get_columns():
-    #     #         quant_unique_values = len(self.data_loader_model.get_column_unique_values(column))
-    #     #         if quant_unique_values <= 10:
-    #     #             categorical_columns.append(column)
-                
-    #     self.main_view.load_lists_widgets_treemap(sorted(self.data_loader_model.get_categorical_columns()))
-
+    
 
 if __name__ == "__main__":
     controller = VisualizationController()
